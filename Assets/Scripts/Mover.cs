@@ -6,6 +6,7 @@ using UnityEngine;
 public class Mover : MonoBehaviour
 {
     Rigidbody rocketbody;
+    AudioSource thrustsound;
     [SerializeField] float ThrustValue = 1f;
     [SerializeField] float RotateValue = 1f;
 
@@ -13,6 +14,7 @@ public class Mover : MonoBehaviour
     void Start()
     {
         rocketbody = GetComponent<Rigidbody>();
+        thrustsound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -26,7 +28,15 @@ public class Mover : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
+            if (thrustsound.isPlaying == false)
+            {
+                thrustsound.Play();
+            }    
             rocketbody.AddRelativeForce(Vector3.up * Time.deltaTime * ThrustValue);
+        }
+        else
+        {
+            thrustsound.Stop();
         }
     }
 
