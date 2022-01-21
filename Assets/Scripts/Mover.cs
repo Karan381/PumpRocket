@@ -44,6 +44,8 @@ public class Mover : MonoBehaviour
 
     private void ApplyRotation(float RotationThisFrame)
     {
+        rocketbody.freezeRotation = true; //freezing rotation so that we can rotate manually
         transform.Rotate(Vector3.forward * Time.deltaTime * RotationThisFrame);
+        rocketbody.freezeRotation = false;//freezing rotation so that physics system can take over;
     }
 }
