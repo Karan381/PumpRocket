@@ -6,19 +6,26 @@ using UnityEngine.SceneManagement;
 public class CollissionHandler : MonoBehaviour
 {
     [SerializeField]float loadDelay = .8f;
+    [SerializeField] AudioClip success;
+    [SerializeField] AudioClip crash;
+    
     Mover movingSystem;
+    AudioSource audioSource;
 
+    bool isTransition = false;
 
     private void Start()
     {
         movingSystem = GetComponent<Mover>();
+        audioSource = GetComponent<AudioSource>();
     }
     private void OnCollisionEnter(Collision collision)
     {
+        if (isTransition) { return; }
+
         switch (collision.gameObject.tag)
         {
             case "Friendly":
-                Debug.Log("this is friendly");
                 break;
             case "Finish":
                 StartSuccessSequence();
@@ -26,21 +33,25 @@ public class CollissionHandler : MonoBehaviour
             default:
                 StartCrashSequence();
                 break;
-
         }
     }
 
     void StartSuccessSequence()
     {
+        audioSource.Stop();  
+        audioSource.PlayOneShot(success);
         movingSystem.enabled = false;
         Invoke("NextLevel", loadDelay);
+        isTransition = true;    
     }
 
     void StartCrashSequence()
     {
-        
+        audioSource.Stop();
+        audioSource.PlayOneShot(crash);
         movingSystem.enabled = false;
         Invoke("ReloadScene", loadDelay);
+        isTransition = true; 
     }
 
     
