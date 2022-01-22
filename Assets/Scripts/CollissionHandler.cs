@@ -5,6 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class CollissionHandler : MonoBehaviour
 {
+    [SerializeField]float loadDelay = .8f;
+    Mover movingSystem;
+
+
+    private void Start()
+    {
+        movingSystem = GetComponent<Mover>();
+    }
     private void OnCollisionEnter(Collision collision)
     {
         switch (collision.gameObject.tag)
@@ -13,19 +21,30 @@ public class CollissionHandler : MonoBehaviour
                 Debug.Log("this is friendly");
                 break;
             case "Finish":
-                NextLevel();
-                break;
-            case "Fuel":
-                Debug.Log("fuel");
+                StartSuccessSequence();
                 break;
             default:
-                ReloadScene();
+                StartCrashSequence();
                 break;
 
         }
     }
 
-    private static void ReloadScene()
+    void StartSuccessSequence()
+    {
+        movingSystem.enabled = false;
+        Invoke("NextLevel", loadDelay);
+    }
+
+    void StartCrashSequence()
+    {
+        
+        movingSystem.enabled = false;
+        Invoke("ReloadScene", loadDelay);
+    }
+
+    
+    private void ReloadScene()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex);
