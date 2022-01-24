@@ -7,9 +7,13 @@ public class Mover : MonoBehaviour
 {
     Rigidbody rocketbody;
     AudioSource audioSource;
+
     [SerializeField] AudioClip mainEngine;
     [SerializeField] float ThrustValue = 1f;
     [SerializeField] float RotateValue = 1f;
+    [SerializeField] ParticleSystem mainbooster;
+    [SerializeField] ParticleSystem rightsidebooster;
+    [SerializeField] ParticleSystem leftsidebooster;
 
     // Start is called before the first frame update
     void Start()
@@ -32,12 +36,14 @@ public class Mover : MonoBehaviour
             if (audioSource.isPlaying == false)
             {
                 audioSource.PlayOneShot(mainEngine);
+                mainbooster.Play();
             }    
             rocketbody.AddRelativeForce(Vector3.up * Time.deltaTime * ThrustValue);
         }
         else
         {
             audioSource.Stop();
+            mainbooster.Stop();
         }
     }
 
@@ -45,11 +51,26 @@ public class Mover : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.A))
         {
+            if (!leftsidebooster.isPlaying)
+            {
+                leftsidebooster.Play();
+            }
             ApplyRotation(RotateValue);
+            
         }
         else if (Input.GetKey(KeyCode.D))
         {
+            if (!rightsidebooster.isPlaying)
+            {
+                rightsidebooster.Play();
+            }
             ApplyRotation(-RotateValue);
+            
+        }
+        else
+        {
+            leftsidebooster.Stop();
+            rightsidebooster.Stop();
         }
     }
 
