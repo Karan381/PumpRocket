@@ -5,8 +5,12 @@ using UnityEngine;
 
 public class Mover : MonoBehaviour
 {
+   //Cache Ref
+    
     Rigidbody rocketbody;
     AudioSource audioSource;
+
+    //Parameters
 
     [SerializeField] AudioClip mainEngine;
     [SerializeField] float ThrustValue = 1f;
@@ -33,45 +37,74 @@ public class Mover : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            if (audioSource.isPlaying == false)
-            {
-                audioSource.PlayOneShot(mainEngine);
-                mainbooster.Play();
-            }    
-            rocketbody.AddRelativeForce(Vector3.up * Time.deltaTime * ThrustValue);
+            StartThrusting();
         }
         else
         {
-            audioSource.Stop();
-            mainbooster.Stop();
+            StopThrusting();
         }
     }
 
     void ProcessRotation()
     {
-        if(Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.A))
         {
-            if (!leftsidebooster.isPlaying)
-            {
-                leftsidebooster.Play();
-            }
-            ApplyRotation(RotateValue);
-            
+            RotateLeft();
+
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            if (!rightsidebooster.isPlaying)
-            {
-                rightsidebooster.Play();
-            }
-            ApplyRotation(-RotateValue);
-            
+            RotateRight();
+
         }
         else
         {
-            leftsidebooster.Stop();
-            rightsidebooster.Stop();
+            StopRotation();
         }
+    }
+
+//Thrusting
+    private void StartThrusting()
+    {
+        if (audioSource.isPlaying == false)
+        {
+            audioSource.PlayOneShot(mainEngine);
+            mainbooster.Play();
+        }
+        rocketbody.AddRelativeForce(Vector3.up * Time.deltaTime * ThrustValue);
+    }
+
+    private void StopThrusting()
+    {
+        audioSource.Stop();
+        mainbooster.Stop();
+    }
+
+   
+//Rotating
+ 
+
+    private void RotateLeft()
+    {
+        if (!leftsidebooster.isPlaying)
+        {
+            leftsidebooster.Play();
+        }
+        ApplyRotation(RotateValue);
+    }
+    private void RotateRight()
+    {
+        if (!rightsidebooster.isPlaying)
+        {
+            rightsidebooster.Play();
+        }
+        ApplyRotation(-RotateValue);
+    }
+
+    private void StopRotation()
+    {
+        leftsidebooster.Stop();
+        rightsidebooster.Stop();
     }
 
     private void ApplyRotation(float RotationThisFrame)
